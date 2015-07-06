@@ -43,12 +43,14 @@
 
 <script type="text/x-handlebars" data-template-name="user">
 	<h3>{{name}}'s Github</h3>
+	
 </script>
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/javascripts/vendor/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/javascripts/vendor/ember/handlebars-1.0.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/javascripts/vendor/ember/ember-1.3.2.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/javascripts/vendor/bootstrap-3.3.5/js/bootstrap.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/javascripts/vendor/jquery-ui-1.10.3.js"></script>
 
 <script>
 
@@ -73,12 +75,14 @@
 			renderedOn: function() {
 				return new Date();
 			}.property(),
+			
 			actions : {
 				clicked : function() {
 					alert("I've been clicked!");
-			}
+				},
+				
 
-		}
+			}
 	})
 	
 	App.Router.map(function () {
@@ -91,7 +95,42 @@
 		}
 	
 	})
+	
+	App.Datepicker = Ember.View.extend({ 
+		attributes: ['altField', 'altFormat', 'appendText', 'autoSize', 'beforeShow', 'beforeShowDay', 'buttonImage', 
+		             'buttonImage', 'buttonImageOnly', 'buttonText', 'calculateWeek', 'changeMonth', 'closeText', 'constraintInput',
+		             'currentText', 'dateFormat', 'dayNames', 'dayNamesMin', 'dayNamesShort', 'defaultDate', 'duration', 'firstDay', 'gotoCurrent',
+		             'hideIfNoPrevNext', 'isRTL', 'maxDate', 'minDate', 'monthNames', 'monthNamesShort', 'navigationAsDateFormat', 'nextText', 
+		             'numberofMonths', 'onChangemonthYear', 'onClose', 'onSelect', 'prevText', 'selectOtherMonths', 'shortYearCutoff', 'showAnim', 
+		             'showButtonPanel', 'showCurrentAtPos', 'showMonthAfterYear', 'showOn',  'showOptions', 'showOtherMonths', 'showWeek', 
+		             'stepMonths', 'weekHeader', 'yearRange', 'yearSuffix', 'destroy', 'dialog', 'getDate', 'hide', 'isDisabled', 'option', 'refresh',
+		             'setDate', 'show', 'widget'],
+		             
+		tagname: 'input',
+		classNames: 'datepicker',
+		
+		didInsertElement: function() {
+			var options = {};
+			var self = this;
+			
+			this.get('attributes').forEach(function(attr) {
+				if(self[attr] !== undefined) {
+					options[attr] = self[attr];
+				} 
+			});
+			
+			var onSelectCallback = options.onSelect;
+			options.onSelect = function() {
+				Ember.set(self, 'value', this.getDate(true));
+				if(onSelectCallback) {
+					onSelectCallback.call(this)
+				}
+			}
+			
+			this.$().datepicker(options);
+		},
+	});
 </script>
-
+<!-- https://gist.github.com/BlakeWilliams/5375707 -->
 </body>
 </html>
